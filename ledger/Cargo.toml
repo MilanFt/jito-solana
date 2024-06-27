@@ -26,6 +26,7 @@ libc = { workspace = true }
 log = { workspace = true }
 lru = { workspace = true }
 mockall = { workspace = true }
+nohash-hasher = { workspace = true }
 num_cpus = { workspace = true }
 num_enum = { workspace = true }
 prost = { workspace = true }
