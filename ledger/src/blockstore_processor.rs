@@ -689,18 +689,11 @@ fn process_batches(
 
 fn schedule_batches_for_execution(
     bank: &BankWithScheduler,
-    batches: &[TransactionBatchWithIndexes],
+    batches: &[(Vec<usize>, Vec<SanitizedTransaction>)], // (transaction_indexes, transactions)
 ) {
-    for TransactionBatchWithIndexes {
-        batch,
-        transaction_indexes,
-    } in batches
-    {
+    for (transaction_indexes, transactions) in batches {
         bank.schedule_transaction_executions(
-            batch
-                .sanitized_transactions()
-                .iter()
-                .zip(transaction_indexes.iter()),
+            transactions.iter().zip(transaction_indexes.iter()),
         );
     }
 }
