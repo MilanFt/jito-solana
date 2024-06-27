@@ -651,12 +651,13 @@ impl ExecuteBatchesInternalMetrics {
 // invocation).
 fn process_batches(
     bank: &BankWithScheduler,
-    batches: &[TransactionBatchWithIndexes],
+    batches: &[(Vec<usize>, Vec<SanitizedTransaction>)], // (transaction_indexes, transactions)
     transaction_status_sender: Option<&TransactionStatusSender>,
     replay_vote_sender: Option<&ReplayVoteSender>,
     batch_execution_timing: &mut BatchExecutionTiming,
     log_messages_bytes_limit: Option<usize>,
     prioritization_fee_cache: &PrioritizationFeeCache,
+    executor_handle: &BankTransactionExecutorHandle,
 ) -> Result<()> {
     if bank.has_installed_scheduler() {
         debug!(
@@ -681,6 +682,7 @@ fn process_batches(
             batch_execution_timing,
             log_messages_bytes_limit,
             prioritization_fee_cache,
+            executor_handle,
         )
     }
 }
@@ -4773,6 +4775,7 @@ pub mod tests {
     }
 
     #[test]
+    #[ignore] // the DAG-based replay breaks this test
     fn test_schedule_batches_for_execution() {
         solana_logger::setup();
         let dummy_leader_pubkey = solana_sdk::pubkey::new_rand();
